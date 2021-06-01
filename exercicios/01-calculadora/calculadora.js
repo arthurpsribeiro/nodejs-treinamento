@@ -3,48 +3,26 @@ const calculadora = {
         return a + b;
     },
     somarNumeros(...n) {
-        let total = 0
-        n.forEach((value) => {
-            total += value; 
-        })
-        return total;
+        return n.reduce((ac, value) => ac + value)
     },
     subtrair(a, b){
         return a - b;
     },
     subtrairNumeros(...n) {
-        let total = n[0];
-        n.forEach((value, index) => {
-            if (index > 0){
-                total -= value;
-            }
-        });
-        return total;
+        return n.reduce((ac, value) => ac - value)
+
     },
-    multiplicar(a,b){
+    multiplicar(a, b){
         return a * b;
     },
     multiplicarNumeros(...n){
-        let total = 1;
-        n.forEach((value) => {
-            total *= value;
-        })
-        return total;
+        return n.reduce((ac, value) => ac * value)
     },
     dividir(a,b){
         return a / b;
     },
     dividirNumeros(...n){
-        let total = n[0];
-        n.forEach((value, index) => {
-            if (index > 0){
-                total /= value;
-            }
-        })
-        return total;
+        return n.reduce((ac, value) => ac / value)
     }
-
-
 }
-
 module.exports = calculadora;
