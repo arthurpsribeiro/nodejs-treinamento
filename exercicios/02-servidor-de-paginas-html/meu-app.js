@@ -27,6 +27,10 @@ const server = http.createServer((request, response) => {
             }
         });
 
+    } else {
+        response.writeHead(500, {'Content-Type': 'text/html'});
+        response.write(`Arquivo ${file} não enconrado...`)
+        response.end();
     }
 
 });
