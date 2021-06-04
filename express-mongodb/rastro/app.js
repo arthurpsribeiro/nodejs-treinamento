@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 
 //para fazer conexão com o MongoDB, através do Mongoose
 let connect = mongoose.connect(
-    'mongodb://localhost:2707//rastro-dev', //string de conexão
-    { // objeto de configurações
+    'mongodb://localhost:27017/rastro-dev', // string de conexão
+    {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true
@@ -15,9 +15,23 @@ let connect = mongoose.connect(
 console.log(connect);
 
 //classe schema do mongoose permite definir a estrutura de uma coleção no MongoDB
-const schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-console.log(typeof(schema)); // CONTINUA.... 
+// Schema() define a estrutura da coleção
+const rastreadorSchema = Schema({
+    codigoRastreador: {type: String, required: true, index: {unique: true}},
+    placaVeiculo: {type: String, required: true},
+    cpfCliente: {type: String, required: true}
+});
+
+console.log(typeof(Schema));  
+
+// model() cria a coleção
+
+const Rastreador = mongoose.model('rastreadores'/*nome da coleção */, rastreadorSchema);
+console.log(typeof(Rastreador));
+
+mongoose.disconnect;
 
 const app = express();
 
