@@ -1,17 +1,18 @@
 const mongoose = require("mongoose");
 
+//criar função para conectar
+
+const connectUrl = "mongodb://localhost:27017/rastro-dev";
+const connectOptions = {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useCreateIndex: true,
+};
+
 module.exports = (app) => {
 	const RastreamentoController = {
 		cadastrar(request, response) {
 			console.log("rota /rastreamento chamada...");
-			console.log(request.body);
-
-			let connectUrl = "mongodb://localhost:27017/rastro-dev";
-			let connectOptions = {
-				useNewUrlParser: true,
-				useUnifiedTopology: true,
-				useCreateIndex: true,
-			};
 
 			const Rastreamento = app.models.rastreamento;
 			const Rastreador = app.models.rastreador;
@@ -83,6 +84,51 @@ module.exports = (app) => {
 						.status(500)
 						.send(`Erro ao conectar no banco MongoDB: ${error}`);
 				});
+		},
+
+		buscarCodigoRastreador(request, response) {
+			console.log("Rota GET / rastreamento/:codigoRastreador chamada...");
+
+			if (
+				request.params.codigoRastreador == "" ||
+				request.params.codigoRastreador == null
+			) {
+				response.status(400).send("Parâmetro codigoRastreador inválido");
+			} else {
+				mongoose
+					.connect(connectUrl, connectOptions)
+					.then(() => {
+						const Rastreamento = app.models.rastreamento;
+
+						Rastreamento.find({
+							codigoRastreador: request.params.codigoRastreador,
+						})
+							.then((result) => {
+								//lista de rastreamento
+								console.log(result);
+								mongoose.disconnect();
+								response.status(200).send(result);
+							})
+							.catch((error) => {
+								// erro ao realizar a pesquisa
+								console.log(
+									`Erro ao realizar a consulta de rastreamentos: ${error}`
+								);
+								mongoose.disconnect();
+								response
+									.status(500)
+									.send(
+										`Erro ao realizar a consulta de rastreamentos: ${error}`
+									);
+							});
+					})
+					.catch((error) => {
+						console.log(`Erro ao conectar no banco MongoDB: ${error}`);
+						response
+							.status(500)
+							.send(`Erro ao conectar no banco MongoDB: ${error}`);
+					});
+			}
 		},
 	};
 	return RastreamentoController;
