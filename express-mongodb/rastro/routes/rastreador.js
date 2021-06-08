@@ -13,6 +13,15 @@ module.exports = (app) => {
 
 	// criando rota para altarar o rastreador
 	// PUT
-	// rota /rastreador
+	// rota '/rastreador'
 	app.put("/rastreador", app.controllers.rastreador.alterar);
+
+	// criando rota para excluir os dados do rastreador
+	// DELETE
+	// rota '/rastreador/:codigoRastreador'
+
+	app.delete(
+		"/rastreador/:codigoRastreador",
+		app.controllers.rastreador.excluir
+	);
 };

@@ -97,6 +97,63 @@ module.exports = (app) => {
 					console.log(`Erro ao conectar no banco MongoDB: ${error}`);
 				});
 		},
+
+		excluir(request, response) {
+			console.log("Rota DELETE /rastreador chamada...");
+			console.log(request.params);
+
+			const Rastreamento = app.models.rastreamento;
+			const Rastreador = app.models.rastreador;
+
+			mongoose
+				.connect(connectUrl, connectOptions)
+				.then(() => {
+					Rastreamento.deleteMany({
+						codigoRastreador: request.params.codigoRastreador,
+					})
+						.then((result) => {
+							console.log(result);
+							Rastreador.deleteOne({
+								codigoRastreador: request.params.codigoRastreador,
+							})
+								.then((result) => {
+									if (result.deletedCount > 0) {
+										response
+											.status(200)
+											.send(
+												`Rastreador ${request.params.codigoRastreador} deletado com sucesso`
+											);
+									} else {
+										response
+											.status(500)
+											.send(
+												`Rastreador ${request.params.codigoRastreador} não encontrado`
+											);
+									}
+
+									mongoose.disconnect();
+								})
+								.catch((error) => {
+									mongoose.disconnect();
+									response
+										.status(500)
+										.send(`Erro ao deletar o Rastreador ${error}`);
+								});
+						})
+						.catch((error) => {
+							mongoose.disconnect();
+							response
+								.status(500)
+								.send(`Erro ao deletar o Rastreador ${error}`);
+						});
+				})
+				.catch((error) => {
+					response
+						.status(500)
+						.send(`Erro ao conectar no banco MongoDB: ${error}`);
+					console.log(`Erro ao conectar no banco MongoDB: ${error}`);
+				});
+		},
 	};
 	return RastreadorController;
 };
