@@ -9,7 +9,7 @@ module.exports = (app) => {
 
 			mongoose
 				.connect(app.const.db.connectUrl, app.const.db.connectOptions)
-				.then((result) => {
+				.then(() => {
 					const Usuario = app.models.usuario;
 					const usuario = new Usuario(request.body);
 
@@ -23,12 +23,14 @@ module.exports = (app) => {
 						.then((result) => {
 							console.log(`Usuario ${result.login} criado com sucesso:`);
 							response.status(200).send(result);
+							mongoose.disconnect();
 						})
 						.catch((error) => {
 							console.log(`Erro ao cadastrar o usuario: ${error}`);
 							response
 								.status(500)
 								.send(`Erro ao cadastrar o usuario: ${error}`);
+							mongoose.disconnect();
 						});
 				})
 				.catch((error) => {
@@ -44,7 +46,7 @@ module.exports = (app) => {
 
 			mongoose
 				.connect(app.const.db.connectUrl, app.const.db.connectOptions)
-				.then((result) => {
+				.then(() => {
 					const Usuario = app.models.usuario;
 					Usuario.find({ login: request.body.login })
 						.then((result) => {
