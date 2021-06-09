@@ -1,12 +1,5 @@
 const mongoose = require("mongoose");
 
-const connectUrl = "mongodb://localhost:27017/rastro-dev"; //string de conexao
-const connectOptions = {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useCreateIndex: true,
-};
-
 module.exports = (app) => {
 	const RastreadorController = {
 		// método cadastrar vai atender a rota POST /rastreador
@@ -17,7 +10,7 @@ module.exports = (app) => {
 			const rastreador = new Rastreador(request.body);
 
 			mongoose
-				.connect(connectUrl, connectOptions)
+				.connect(app.const.db.connectUrl, app.const.db.connectOptions)
 				.then(() => {
 					// esse result, caso seja passado como parâmetro, é um objeto Mongoose (objeto de conexão)
 					console.log("Conexao com MongoDB realizada.");
@@ -53,7 +46,7 @@ module.exports = (app) => {
 			const Rastreador = app.models.rastreador;
 
 			mongoose
-				.connect(connectUrl, connectOptions)
+				.connect(app.const.db.connectUrl, app.const.db.connectOptions)
 				.then(() => {
 					// a função updateOne() altera um documento da coleção
 					Rastreador.updateOne(
@@ -70,8 +63,6 @@ module.exports = (app) => {
 						}
 					)
 						.then((result) => {
-							console.log(result);
-
 							if (result.nModified > 0) {
 								mongoose.disconnect();
 								response.status(200).send("Rastreador alterado com sucesso");
@@ -100,19 +91,17 @@ module.exports = (app) => {
 
 		excluir(request, response) {
 			console.log("Rota DELETE /rastreador chamada...");
-			console.log(request.params);
 
 			const Rastreamento = app.models.rastreamento;
 			const Rastreador = app.models.rastreador;
 
 			mongoose
-				.connect(connectUrl, connectOptions)
+				.connect(app.const.db.connectUrl, app.const.db.connectOptions)
 				.then(() => {
 					Rastreamento.deleteMany({
 						codigoRastreador: request.params.codigoRastreador,
 					})
 						.then((result) => {
-							console.log(result);
 							Rastreador.deleteOne({
 								codigoRastreador: request.params.codigoRastreador,
 							})
