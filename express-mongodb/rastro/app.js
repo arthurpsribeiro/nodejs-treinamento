@@ -17,5 +17,5 @@ consign()
 	.into(app);
 
 app.listen(app.const.app.porta, () =>
-	console.log("Servidor rodando na porta ${app.const.app.porta}")
+	console.log(`Servidor rodando na porta ${app.const.app.porta}`)
 );
