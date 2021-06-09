@@ -1,6 +1,12 @@
+const propertiesReader = require("properties-reader");
+
+const properties = propertiesReader("./app.properties");
+
 module.exports = (app) => {
 	const dbConst = {
-		connectUrl: "mongodb://localhost:27017/rastro-dev",
+		connectUrl: `mongodb://${properties.get("db.servidor")}:${properties.get(
+			"db.porta"
+		)}/${properties.get("db.database")}`,
 		connectOptions: {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,

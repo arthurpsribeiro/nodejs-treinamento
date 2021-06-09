@@ -16,4 +16,6 @@ consign()
 	.then("routes")
 	.into(app);
 
-app.listen(3000, () => console.log("Servidor rodando na porta 3000"));
+app.listen(app.const.app.porta, () =>
+	console.log("Servidor rodando na porta ${app.const.app.porta}")
+);
